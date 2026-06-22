@@ -1,14 +1,33 @@
 "use client";
 
 import { useState } from "react";
+import { supabase } from "@/lib/supabase/client";
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+    setError(null);
+
+    const { error } = await supabase.from("contact_submissions").insert({
+      name: form.name,
+      email: form.email,
+      subject: form.subject,
+      message: form.message,
+    });
+
+    setLoading(false);
+
+    if (error) {
+      setError("Something went wrong. Please try again.");
+    } else {
+      setSubmitted(true);
+    }
   };
 
   const inputClass =
@@ -83,12 +102,17 @@ export default function Contact() {
               />
             </div>
 
+            {error && (
+              <p className="text-red-400 text-sm">{error}</p>
+            )}
+
             <div className="pt-2">
               <button
                 type="submit"
-                className="px-14 py-4 bg-white text-brand-black text-xs font-bold tracking-[0.3em] uppercase hover:bg-accent transition-colors duration-300"
+                disabled={loading}
+                className="px-14 py-4 bg-white text-brand-black text-xs font-bold tracking-[0.3em] uppercase hover:bg-accent transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Submit
+                {loading ? "Sending..." : "Submit"}
               </button>
             </div>
           </form>
