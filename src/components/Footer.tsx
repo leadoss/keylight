@@ -34,7 +34,7 @@ export default function Footer() {
             <p>Spintex Road, Robin Hood Hotel</p>
             <p>Professional KeyLight Limited</p>
             <p className="mt-3">
-              Tel : (+233) 530000220
+              Tel : (+233) 540135444
             </p>
             <p>
               Email: <a href="mailto:Professionalkeylight@gmail.com" className="hover:text-brand-black transition-colors">Professionalkeylight@gmail.com</a>
